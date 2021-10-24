@@ -2,7 +2,7 @@ import random
 import datetime
 import os
 
-version = "0.0.1"
+version = "0.0.2"
 # Символы используемые для пароля.
 ARRAY_SYMBOLS = [
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
