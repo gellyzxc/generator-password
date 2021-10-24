@@ -1,9 +1,8 @@
 import random
 import datetime
 import os
-import cryptocode
 
-version = "0.0.3"
+version = "0.0.2"
 # Символы используемые для пароля.
 ARRAY_SYMBOLS = [
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -16,62 +15,51 @@ ARRAY_SYMBOLS = [
 
 COUNT_SYMBOLS = 4
 print(f'Версия: {version}')
+input_count = input("Введите кол во символов в пароле: ")
+if input_count.isdigit():
+    count_symbols = int(input_count)
+else:
+    print(f'Это не число.')
+    count_symbols = COUNT_SYMBOLS
 
-task = input(f'Выберите дейстивие: GENERATE PASSWORD (0) | ENCRYPT (1)  ')
-
-if task == '0':
-    input_count = input("Введите кол во символов в пароле: ")
-    if input_count.isdigit():
-        count_symbols = int(input_count)
-    else:
-        print(f'Это не число.')
-        count_symbols = COUNT_SYMBOLS
-
-    def rand_symbols():
-        return ARRAY_SYMBOLS[
-            random.randint(0, len(ARRAY_SYMBOLS) - 1)
-        ]
+def rand_symbols():
+    return ARRAY_SYMBOLS[
+        random.randint(0, len(ARRAY_SYMBOLS) - 1)
+    ]
 
 
-    print(f'Кол-во доступных символов: {len(ARRAY_SYMBOLS)}')
-    # print(f'Доступные символы: {ARRAY_SYMBOLS}')
+print(f'Кол-во доступных символов: {len(ARRAY_SYMBOLS)}')
+# print(f'Доступные символы: {ARRAY_SYMBOLS}')
 
-    password = ''
+password = ''
 
-    # Генерация пароля
+# Генерация пароля
 
-    for i in range(0, count_symbols):
-        password = password + f'{rand_symbols()}'
+for i in range(0, count_symbols):
+    password = password + f'{rand_symbols()}'
 
-    print(f'Пароль: {password}')
+print(f'Пароль: {password}')
 
-    text_datetime = f'{datetime.datetime.now()}'
+text_datetime = f'{datetime.datetime.now()}'
 
-    symbols_replace = ['-', ':', ' ', '.']
-    filename = ''
-    for s in text_datetime:
-        is_write = True
-        for sr in symbols_replace:
-            if s == sr:
-                filename += '_'
-                is_write = False
+symbols_replace = ['-', ':', ' ', '.']
+filename = ''
+for s in text_datetime:
+    is_write = True
+    for sr in symbols_replace:
+        if s == sr:
+            filename += '_'
+            is_write = False
 
-        if is_write:
-            filename += s
-    # Запись готового пароля в txt файл
-    if not os.path.exists('passwords'):
-        os.mkdir('passwords')
+    if is_write:
+        filename += s
+# Запись готового пароля в txt файл
+if not os.path.exists('passwords'):
+    os.mkdir('passwords')
 
-    pass_encoded = cryptocode.encrypt(password, filename)
+with open(f'passwords/{filename}_pswrd.txt', 'a') as password_string:
+    password_string.write('{} \n'.format(f'{password} \n {hash_object.hexdigest()}'))
 
-    with open(f'passwords/{filename}_pswrd.txt', 'a') as password_string:
-        password_string.write('{} \n'.format(f'{pass_encoded}'))
-
-if task == '1':
-    string = input(f'Введите зашифрованный пароль: ')
-    key = input(f'Введите ключ: ')
-    result = cryptocode.decrypt(string, key)
-    print(f'Ваш пароль(изходя из введенных данных): {result}')
 
 print(f'Нажмите клавишу ENTER чтобы закрыть')
 input()
