@@ -5,7 +5,6 @@ __pycache__/
 .idea
 passwords
 .vscode
-main.py-old.py
 
 # C extensions
 *.so
