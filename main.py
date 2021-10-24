@@ -3,7 +3,8 @@ import datetime
 import os
 import cryptocode
 
-version = "0.0.3"
+titlescreen = "damn... gelly's password generator"
+version = "0.0.4 - with password encryption"
 # Символы используемые для пароля.
 ARRAY_SYMBOLS = [
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -15,6 +16,7 @@ ARRAY_SYMBOLS = [
 # Получаем кол-во символов
 
 COUNT_SYMBOLS = 4
+print(f'{titlescreen}')
 print(f'Версия: {version}')
 
 task = input(f'Выберите дейстивие: GENERATE PASSWORD (0) | ENCRYPT (1)  ')
@@ -62,7 +64,12 @@ if task == '0':
     if not os.path.exists('passwords'):
         os.mkdir('passwords')
 
-    pass_encoded = cryptocode.encrypt(password, filename)
+    print(f'Введите ключ для последущей дешифрации пароля: ')
+    print(f'Если хотите оставить ключ по умолчанию то нажмите ENTER')
+    key_crypt = input()
+    if not key_crypt: 
+        key_crypt = filename
+    pass_encoded = cryptocode.encrypt(password, key_crypt)
 
     with open(f'passwords/{filename}_pswrd.txt', 'a') as password_string:
         password_string.write('{} \n'.format(f'{pass_encoded}'))
@@ -71,7 +78,7 @@ if task == '1':
     string = input(f'Введите зашифрованный пароль: ')
     key = input(f'Введите ключ: ')
     result = cryptocode.decrypt(string, key)
-    print(f'Ваш пароль(изходя из введенных данных): {result}')
+    print(f'Ваш пароль: {result}')
 
 print(f'Нажмите клавишу ENTER чтобы закрыть')
 input()
