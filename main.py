@@ -1,65 +1,89 @@
 import random
 import datetime
 import os
+from rich.box import ROUNDED
+from Password import Password
+from rich import print
+from rich.layout import Layout
+from rich.panel import Panel
+from rich.console import Group, Console
+from rich.text import Text
+from rich import box
+from rich.style import Style
 
-version = "0.0.2"
-# Символы используемые для пароля.
-ARRAY_SYMBOLS = [
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-    'q', 'w', 'e', 'r', 't', 'y','u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm',
-    'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'o', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'm',
-    '/', '@', '$', '%', '&'
+
+
+password = Password()
+
+def random_symbols():
+    return password.ARRAY_SYMBOLS[
+        random.randint(0, len(password.ARRAY_SYMBOLS) - 1)
     ]
 
-# Получаем кол-во символов
+def file_name():
 
-COUNT_SYMBOLS = 4
-print(f'Версия: {version}')
-input_count = input("Введите кол во символов в пароле: ")
-if input_count.isdigit():
-    count_symbols = int(input_count)
+    text_datetime = f'{datetime.datetime.now()}'
+
+    symbols_replace = ['-', ':', ' ', '.']
+    fn = ''
+    for s in text_datetime:
+        is_write = True
+        for sr in symbols_replace:
+            if s == sr:
+                fn += '_'
+                is_write = False
+
+        if is_write:
+            fn += s
+    return fn
+
+count_symbols = input("Введите кол во символов: ")
+if count_symbols.isdigit():
+    password.generate(int(count_symbols))
 else:
-    print(f'Это не число.')
-    count_symbols = COUNT_SYMBOLS
+    password.generate(None)
 
-def rand_symbols():
-    return ARRAY_SYMBOLS[
-        random.randint(0, len(ARRAY_SYMBOLS) - 1)
-    ]
+#---
 
-
-print(f'Кол-во доступных символов: {len(ARRAY_SYMBOLS)}')
-# print(f'Доступные символы: {ARRAY_SYMBOLS}')
-
-password = ''
-
-# Генерация пароля
-
-for i in range(0, count_symbols):
-    password = password + f'{rand_symbols()}'
-
-print(f'Пароль: {password}')
-
-text_datetime = f'{datetime.datetime.now()}'
-
-symbols_replace = ['-', ':', ' ', '.']
-filename = ''
-for s in text_datetime:
-    is_write = True
-    for sr in symbols_replace:
-        if s == sr:
-            filename += '_'
-            is_write = False
-
-    if is_write:
-        filename += s
-# Запись готового пароля в txt файл
 if not os.path.exists('passwords'):
     os.mkdir('passwords')
 
-with open(f'passwords/{filename}_pswrd.txt', 'a') as password_string:
-    password_string.write('{} \n'.format(f'{password} \n {hash_object.hexdigest()}'))
+with open(f'passwords/{file_name()}_pswrd.txt', 'a') as password_string:
+    password_string.write('{} \n'.format(f'{password.password}'))
 
 
-print(f'Нажмите клавишу ENTER чтобы закрыть')
+textstyle = Style(color="magenta", italic=True)
+bgstyle = Style(bgcolor="cyan")
+
+print_cas = Text.from_markup(
+    f'Кол во доступных символов: {len(password.get_array_symbols())}',
+    style=textstyle
+)
+
+print_cv = Text.from_markup(
+    f'Кол во возможных комбинаций: {password.count_variants}',
+    style=textstyle
+)
+
+print_password = Text.from_markup(
+    f'Сгенерированный пароль: {password.password}',
+    style=textstyle
+)
+
+console = Console()
+layout = Layout(name="info")
+layout["info"].size = 1
+layout.update(
+    Panel(
+        Group(
+            print_cas, print_cv, print_password
+        ),
+        title="generator paroley",
+        subtitle="made by gellyzxc",
+        box=box.ROUNDED,
+        style=bgstyle,
+    )
+)
+os.system('cls||clear')
+print(layout)
 input()
