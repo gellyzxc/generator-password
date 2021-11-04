@@ -31,3 +31,13 @@ pip install Flask
 ```bash
 pip install rich
 ```
+
+[hashlib](https://pypi.org/project/hashlib/)
+```bash
+pip install hashlib
+```
+
+[hashlib](https://pypi.org/project/typer/)
+```bash
+pip install typer
+```

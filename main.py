@@ -10,6 +10,7 @@ from rich.console import Group, Console
 from rich.text import Text
 from rich import box
 from rich.style import Style
+from rich.table import Table
 
 
 
@@ -38,45 +39,70 @@ def file_name():
     return fn
 
 count_symbols = input("Введите кол во символов: ")
-if count_symbols.isdigit():
-    password.generate(int(count_symbols))
-else:
-    password.generate(None)
+pin_code = input("Введите пин-код для пароля: ")
 
-#---
+if not pin_code.isdigit():
+    pin_code = None
+
+if count_symbols.isdigit():
+    password.generate(int(count_symbols), pin_code)
+else:
+    password.generate(None, None)
+
 
 if not os.path.exists('passwords'):
     os.mkdir('passwords')
 
 with open(f'passwords/{file_name()}_pswrd.txt', 'a') as password_string:
-    password_string.write('{} \n'.format(f'{password.password}'))
+    password_string.write('{} \n'.format(f'{password.check_summa}'))
 
 
-textstyle = Style(color="magenta", italic=True)
-bgstyle = Style(bgcolor="cyan")
-
-print_cas = Text.from_markup(
-    f'Кол во доступных символов: {len(password.get_array_symbols())}',
-    style=textstyle
-)
-
-print_cv = Text.from_markup(
-    f'Кол во возможных комбинаций: {password.count_variants}',
-    style=textstyle
-)
-
-print_password = Text.from_markup(
-    f'Сгенерированный пароль: {password.password}',
-    style=textstyle
-)
 
 console = Console()
 layout = Layout(name="info")
 layout["info"].size = 1
+table_info = Table.grid(padding=1)
+
+textstyle = Style(color="red", italic=True)
+bgstyle = Style(bgcolor="blue")
+
+print_cas = Text.from_markup(
+    f'{len(password.get_array_symbols())}',
+    style=textstyle
+)
+table_info.add_row(f'Кол во доступных символов:', print_cas)
+
+print_cv = Text.from_markup(
+    f'{password.count_variants}',
+    style=textstyle
+)
+table_info.add_row(f'Кол во доступных комбинаций:', print_cv)
+
+print_pin = Text.from_markup(
+    f'{pin_code}',
+    style=textstyle
+)
+table_info.add_row(f'Пин-код:', print_pin)
+
+print_password = Text.from_markup(
+    f'{password.password}',
+    style=textstyle
+)
+table_info.add_row(f'Сгенерированный пароль:', print_password)
+
+print_checksum = Text.from_markup(
+    f'Ключ пароля: {password.check_summa}',
+    style=textstyle
+)
+
+
 layout.update(
     Panel(
         Group(
-            print_cas, print_cv, print_password
+            table_info,
+            "",
+            print_checksum
+
         ),
         title="generator paroley",
         subtitle="made by gellyzxc",
