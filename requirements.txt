@@ -1,4 +1,3 @@
 rich
 flask
-hashlib
 typer
