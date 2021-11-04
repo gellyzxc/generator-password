@@ -105,7 +105,7 @@ layout.update(
 
         ),
         title="generator paroley",
-        subtitle="made by gellyzxc",
+        subtitle="made by gellyzxc | ver 0.0.6",
         box=box.ROUNDED,
         style=bgstyle,
     )

@@ -5,7 +5,7 @@ import hashlib
 
 class Password:
 
-    version = "0.0.5"
+    version = "0.0.6"
 
     ARRAY_SYMBOLS = [
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
