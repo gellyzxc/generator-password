@@ -2,24 +2,23 @@ import random
 import hashlib
 
 
-
 class Password:
+    # Набор доступных символов.
+    ARRAY_SYMBOLS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+                     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+                     'u', 'v', 'w', 'x', 'y', 'z',
+                     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+                     'U', 'V', 'W', 'X', 'Y', 'Z',
+                     '!', '@', '#', '$', '&', '?', '-', '+', '=', '~',
+                     '_', '^', '*', '.']
 
-    version = "0.0.6"
-
-    ARRAY_SYMBOLS = [
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-    'q', 'w', 'e', 'r', 't', 'y','u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm',
-    'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'o', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'm',
-    '/', '@', '$', '%', '&', '*'
-    ]
-
+    # Получаем количество символов в пароле.
     COUNT_SYMBOLS = 4
 
     def __init__(self):
         self.password = None
         self.count_symbols = self.COUNT_SYMBOLS
-        self.count_variants = 0
+        self.count_variant = 0
         self.check_summa = ''
         self.pin_code = ''
 
@@ -29,21 +28,26 @@ class Password:
         if pin_code is not None:
             self.pin_code = pin_code
 
-        self.count_variants = len(self.ARRAY_SYMBOLS) ** self.count_symbols
-                
-        password = ''
+        # Узнаем количество всех возможных комбинаций.
+        self.count_variant = len(self.ARRAY_SYMBOLS) ** self.count_symbols
 
+        # Генерируем уникальный пароль.
+        password = ''
         for i in range(0, self.count_symbols):
             password = password + f'{self.random_symbols()}'
-        
-        self.password = password
 
+        self.password = password
         self.check_summa = hashlib.sha512(f'{password}{self.pin_code}'.encode()).hexdigest()
-    
+
+    # Получить случайный символ.
     def random_symbols(self):
         return self.ARRAY_SYMBOLS[
             random.randint(0, len(self.ARRAY_SYMBOLS) - 1)
-    ]
+        ]
+
+    # Получить символ.
+    def get_symbol(self, number):
+        return self.ARRAY_SYMBOLS[number]
 
     def get_array_symbols(self):
         return self.ARRAY_SYMBOLS
